@@ -1,4 +1,8 @@
-/kmls/*
+/wigleroom/kmls/*.kml
+/networksurveyor/csv/*.csv
+/networksurveyor/gpkg/*.gpkg
+/networksurveyor/gpkg/*.journal
 /.git
 /json.txt
 /omg.txt
+/\.vscode

@@ -1,0 +1,2 @@
+deviceTime,latitude,longitude,altitude,speed,accuracy,missionId,recordNumber,groupNumber,constellation,spaceVehicleId,carrierFreqHz,clockOffset,usedInSolution,undulationM,latitudeStdDevM,longitudeStdDevM,altitudeStdDevM,agcDb,cn0DbHz,hdop,vdop,deviceModel,deviceSerialNumber
+2024-12-17T21:55:55.45793-05:00,44.2382726,-76.5303886,76.44642,0.0,100,NS da9b21af62d733e3 20241217-215551,1,1,GPS,6,1575420032,,,,100.0,100.0,100.0,33.57507,32.564438,,,Pixel 8,da9b21af62d733e3

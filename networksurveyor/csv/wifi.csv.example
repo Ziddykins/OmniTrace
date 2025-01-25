@@ -1,0 +1,2 @@
+deviceTime,latitude,longitude,altitude,speed,accuracy,missionId,recordNumber,sourceAddress,destinationAddress,bssid,beaconInterval,serviceSetType,ssid,supportedRates,extendedSupportedRates,cipherSuites,akmSuites,encryptionType,wps,channel,frequencyMhz,signalStrength,snr,nodeType,standard,passpoint,bandwidth,deviceSerialNumber
+2024-12-17T21:55:58.320315-05:00,44.2382726,-76.5303886,76.44642,0.0,100,NS da9b21af62d733e3 20241217-215551,1,,,b8:94:70:b4:ef:23,,,Altima-0118DA6E,,,,,WPA2_WPA3,true,112,5560,-89.0,,,IEEE80211AX,,MHZ_80,da9b21af62d733e3

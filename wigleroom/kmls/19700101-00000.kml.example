@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:xal="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <Document>
+        <name>YOUR KML FILE</name>
+        <Style id="highConfidence">
+            <IconStyle id="highConfidenceStyle">
+                <scale>1.0</scale>
+                <heading>0.0</heading>
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/ms/icons/green.png</href>
+                    <refreshInterval>0.0</refreshInterval>
+                    <viewRefreshTime>0.0</viewRefreshTime>
+                    <viewBoundScale>0.0</viewBoundScale>
+                </Icon>
+            </IconStyle>
+        </Style>
+        <Style id="mediumConfidence">
+            <IconStyle id="medConfidenceStyle">
+                <scale>1.0</scale>
+                <heading>0.0</heading>
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/ms/icons/yellow.png</href>
+                    <refreshInterval>0.0</refreshInterval>
+                    <viewRefreshTime>0.0</viewRefreshTime>
+                    <viewBoundScale>0.0</viewBoundScale>
+                </Icon>
+            </IconStyle>
+        </Style>
+        <Style id="lowConfidence">
+            <IconStyle id="lowConfidenceStyle">
+                <scale>1.0</scale>
+                <heading>0.0</heading>
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/ms/icons/red.png</href>
+                    <refreshInterval>0.0</refreshInterval>
+                    <viewRefreshTime>0.0</viewRefreshTime>
+                    <viewBoundScale>0.0</viewBoundScale>
+                </Icon>
+            </IconStyle>
+        </Style>
+        <Style id="zeroConfidence">
+            <IconStyle id="zeroConfidenceStyle">
+                <scale>1.0</scale>
+                <heading>0.0</heading>
+                <Icon>
+                    <href>https://maps.google.com/mapfiles/kml/pal2/icon18.png</href>
+                    <refreshInterval>0.0</refreshInterval>
+                    <viewRefreshTime>0.0</viewRefreshTime>
+                    <viewBoundScale>0.0</viewBoundScale>
+                </Icon>
+            </IconStyle>
+        </Style>
+        <Style id="bluetoothClassic">
+            <IconStyle id="bluetoothClassicStyle">
+                <scale>1.0</scale>
+                <heading>0.0</heading>
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/ms/icons/blue.png</href>
+                    <refreshInterval>0.0</refreshInterval>
+                    <viewRefreshTime>0.0</viewRefreshTime>
+                    <viewBoundScale>0.0</viewBoundScale>
+                </Icon>
+            </IconStyle>
+        </Style>
+        <Style id="bluetoothLe">
+            <IconStyle id="bluetoothLeStyle">
+                <scale>1.0</scale>
+                <heading>0.0</heading>
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/ms/icons/lightblue.png</href>
+                    <refreshInterval>0.0</refreshInterval>
+                    <viewRefreshTime>0.0</viewRefreshTime>
+                    <viewBoundScale>0.0</viewBoundScale>
+                </Icon>
+            </IconStyle>
+        </Style>
+        <Style id="cell">
+            <IconStyle id="cellStyle">
+                <scale>1.0</scale>
+                <heading>0.0</heading>
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/ms/icons/pink.png</href>
+                    <refreshInterval>0.0</refreshInterval>
+                    <viewRefreshTime>0.0</viewRefreshTime>
+                    <viewBoundScale>0.0</viewBoundScale>
+                </Icon>
+            </IconStyle>
+        </Style>
+        <Folder>
+            <name>Wifi Networks</name>
+            <Placemark>
+                <name>Example WIFI Network</name>
+                <open>1</open>
+                <description>Network ID: 00:00:00:00:00:00
+Encryption: WPA2
+Time: 2024-08-02T03:22:39.000-07:00
+Signal: -85.0
+Accuracy: 13.0
+Type: WIFI</description>
+                <styleUrl>#lowConfidence</styleUrl>
+                <Point>
+                    <coordinates>-00.00000000,00.00000000</coordinates>
+                </Point>
+            </Placemark>
+        </Folder>
+        <Folder>
+            <name>Cellular Networks</name>
+            <Placemark>
+                <name>EXAMPLE CELL TOWERy</name>
+                <open>1</open>
+                <description>Network ID: 000000_00000_000000000
+Time: 2024-08-02T03:22:39.000-07:00
+Signal: -113.0
+Accuracy: 13.0
+Type: GSM</description>
+                <styleUrl>#cell</styleUrl>
+                <Point>
+                    <coordinates>-00.00000000,00.00000000</coordinates>
+                </Point>
+            </Placemark>
+        </Folder>
+        <Folder>
+            <name>Bluetooth Networks</name>
+            <Placemark>
+                <name>Example SSID</name>
+                <open>1</open>
+                <description>Network ID: 00:00:00:00:00:00
+Time: 2024-08-02T03:24:12.000-07:00
+Signal: -59.0
+Accuracy: 4.0
+Type: BT
+Attributes: Uncategorized;10</description>
+                <styleUrl>#bluetoothClassic</styleUrl>
+                <Point>
+                    <coordinates>-00.0000000,00.0000000</coordinates>
+                </Point>
+            </Placemark>
+        </Folder>
+    </Document>
+</kml>

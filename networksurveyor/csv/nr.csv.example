@@ -1,0 +1,2 @@
+deviceTime,latitude,longitude,altitude,speed,accuracy,missionId,recordNumber,groupNumber,mcc,mnc,tac,nci,narfcn,pci,ssRsrp,ssRsrq,ssSinr,csiRsrp,csiRsrq,csiSinr,ta,servingCell,provider,slot,deviceSerialNumber
+2024-12-17T21:56:02.637225-05:00,44.2382726,-76.5303886,76.44642,0.0,100,NS da9b21af62d733e3 20241217-215551,1,3,,,0,0,434910,51,,,0.0,,,0.0,0,false,Bell,,da9b21af62d733e3

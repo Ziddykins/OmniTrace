@@ -1,0 +1,2 @@
+startTime,latitude,longitude,altitude,accuracy,event,originatingAddress,destinationAddress,csAccessNetworkTechnology,csCellIdentifier,psAccessNetworkTechnology,psCellIdentifier,slot
+2024-12-17T21:56:13.712201-05:00,44.2382726,-76.5303886,76.44641557916711,100.0,LOCATION_UPDATE,,,LTE,302-610-56009-138271019,LTE,302-610-56009-138271019,
