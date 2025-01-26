@@ -28,10 +28,9 @@ my %data;
 my $parser = XML::LibXML->new();
 
 # Getops
-my ($folder, $file_path, $destination);
+my ($folder, $file_path, $destination, $file, $all);
 my ($ignore, $combine, $recursive);
 my ($sql_host, $sql_pass, $sql_db, $sql_tbl, $sql_user, $sql_port);
-my @files;
 my $output_type;
 
 # Array populated when searching for files
@@ -43,28 +42,23 @@ my $cd;
 # Sets the XML parser namespace - defaults to kml
 my $namespace = 'http://www.opengis.net/kml/2.2';
 
-parse_gpkg("/mnt/Users/zigby/source/repos/WigleRoom/networksurveyor/gpkg/craxiom-cellular-20250118-171933.gpkg");
-parse_gpkg("/mnt/Users/zigby/source/repos/WigleRoom/networksurveyor/gpkg/craxiom-wifi-20250115-223306.gpkg");
-parse_gpkg("/mnt/Users/zigby/source/repos/WigleRoom/networksurveyor/gpkg/craxiom-gnss-20241218-153946.gpkg");
-parse_gpkg("/mnt/Users/zigby/source/repos/WigleRoom/networksurveyor/gpkg/craxiom-bluetooth-20250101-082046.gpkg");
-parse_gpkg("/mnt/Users/zigby/source/repos/WigleRoom/networksurveyor/gpkg/craxiom-phonestate-20241221-141557.gpkg");
-die;
 GetOptions(
-    "o|otype=s"    => \$output_type,
-    "f|file=s"     => \@files,
-    "F|folder=s"   => \$folder,
-    "d|dest=s"     => \$destination,
-    "h|help"       => sub { help() },
-    "v|version"    => sub { print $VERSION; },
-    "i|ignore"     => \$ignore,
-    "c|combine"    => \$combine,
-    "r|recursive"  => \$recursive,
-    "n|namespace"  => \$namespace,
-    "H|host=s"     => \$sql_host,
-    "P|password=s" => \$sql_pass,
-    "T|table=s"    => \$sql_tbl,
-    "D|database=s" => \$sql_db,
-    "R|port=s"     => \$sql_port,
+    "a|all"        => \$all,
+    "o|otype=s"      => \$output_type,
+    "f|file=s"       => \$file,
+    "F|folder=s"     => \$folder,
+    "d|dest=s"       => \$destination,
+    "h|help"         => sub { help() },
+    "v|version"      => sub { print $VERSION; },
+    "i|ignore|force" => \$ignore,
+    "c|combine"      => \$combine,
+    "r|recursive"    => \$recursive,
+    "n|namespace"    => \$namespace,
+    "H|host=s"       => \$sql_host,
+    "P|password=s"   => \$sql_pass,
+    "T|table=s"      => \$sql_tbl,
+    "D|database=s"   => \$sql_db,
+    "R|port=s"       => \$sql_port,
 
 );
 
@@ -73,12 +67,35 @@ $namespace = '/kml';
 find_files($folder, $recursive);
 
 foreach my $file (@found_files) {
-    my $xml = $parser->parse_file($file);
+    my $type = $1 if $file =~ /\.(kml|gpkg|csv|json)$/i;
+
+    if ($type eq 'kml') {
+        parse_kml($file);
+    } elsif ($type eq 'gpkg') {
+        parse_gpkg($file);
+    } elsif ($type eq 'json') {
+        parse_json($file);
+    } elsif ($type eq 'csv') {
+        parse_csv($file);
+    } else {
+        print "Unsupported file type: $type\n";
+        next;
+    }
+}
+
+sub parse_kml {
+    my $file = $_[0];
+    my $xml = $parser->parse_file($file) or die "Can't do it: $!\n";
     my $xpc = XML::LibXML::XPathContext->new($xml);
     $xpc->registerNs('kml', $namespace);
 
-    foreach my $folder ($xpc->findnodes("//kml:Folder", $namespace)) {
-        my $type = $1 if $xpc->findvalue("./kml:name", $folder) =~ /(Cell|Wifi|Bluetooth)/;
+    foreach my $folder ($xpc->findnodes('//kml:Folder')) {
+        my $type;
+        if ($xpc->findvalue("./kml:name", $folder) =~ /(Cell|Wifi|Bluetooth)/) {
+            $type = $1;
+            print "Type: $type found\n";
+        }
+        
         my @placemarks = $xpc->findnodes("./kml:Placemark", $folder);
 
         foreach my $placemark (@placemarks) {
@@ -103,16 +120,6 @@ foreach my $file (@found_files) {
     }
 }
 
-open my $jfh, '>', 'json.txt';
-print $jfh encode_json(\%data);
-close $jfh;
-
-open my $fh, '>', 'omg.txt';
-print $fh Dumper(%data);
-close $fh;
-
-print "Done :D\n";
-
 sub find_files {
     my ($path, $recursive) = @_;
 
@@ -123,25 +130,29 @@ sub find_files {
 
         while (readdir $dh) {
             my $file = $_;
-            my $full_path = "$folder\\$file";
+            my $full_path = "$folder/$file";
+            
             my $file_size = 0;
             $full_path =~ s/[\r\n]+//g;
-            print "fp $full_path\n";
 
-            next if $file =~ /^\.\.?/;
+            next if !-f $full_path;
+            next if $file =~ /example$/;
 
             $file_size = -s $full_path;
-
             next if !$file_size;
 
-            push(@found_files, $name);
+            next if $full_path !~ /\.(gpkg|kml|csv)$/i;
+
+            push @found_files, $full_path;
         }
         closedir $dh;
     }
 }
 
 sub wanted {
-    /^.*\.$output_type\z/s && push(@found_files, $name);
+    /^.*\.(kml|csv|gpkg)$/si && push @found_files, $name;
+    #    /^.*\.$output_type\z/s && push @found_files, $name;
+    
 }
 
 sub help {
@@ -150,6 +161,7 @@ sub help {
     my $help = <<HELP;
         $0 - version $VERSION\n
         - Program Options
+            [ -a | --all              ] - If specified, will find all accepted file types
             [ -o | --otype  <#>       ] - If specified, sets the output type; otherwise,
                                           the output type will be determined by the file
                                           extension; if not supported, csv will be the
@@ -217,6 +229,10 @@ sub argument_checks {
         print "Error: The specified output type is not valid\n";
         print "Valid: kml | csv | json\n";
         return -1;
+    }
+
+    if ($file && $all || $folder && !$all) {
+        print STDERR "Cannot specify --file with --all, or --folder without --all\n";
     }
 
     return 0;
@@ -355,6 +371,34 @@ sub merge_hashes {
 sub parse_gpkg {
     my ($file) = @_;
     my @features;
+    my %new_data;
+
+    my %type_map = (
+        'LTE_MESSAGE' => {
+            'type' => 'Cell',
+            'ttype' => 'LTE'
+        },
+        'NR_MESSAGE' => {
+            'type' => 'Cell',
+            'ttype' => 'NR'
+        },
+        'GNSS_MESSAGE' => {
+            'type' => 'Cell',
+            'ttype' => 'GNSS'
+        },
+        'PHONE_STATE_MESSAGE' => {
+            'type' => 'Cell',
+            'ttype' => 'PhoneState'
+        },
+        '80211_BEACON_MESSAGE' => {
+            'type' => 'Wifi',
+            'ttype' => 'WIFI',
+        },
+        'BLUETOOTH_MESSAGE' => {
+            'type' => 'Bluetooth'
+            # ttype = ble/le, etc
+        }        
+    );    
     
     # Open dataset
     my $dataset = Geo::GDAL::FFI::Open($file);
@@ -380,6 +424,29 @@ sub parse_gpkg {
                 push @fields, $field->{Name};
             }
 
+            if ($last_type ne $gpkg_type) {
+                $last_type = $gpkg_type;
+                
+                foreach my $field (@fields) {
+                    #      cell/bt gsm,lte ap/dev macaddr
+                    #$data{$type}{$ttype}{$name}{$netid}{encryption}
+                    my $type  = $type_map{$gpkg_type}{type};
+                    my $ttype = $type_map{$gpkg_type}{ttype};
+                    my $mac;
+
+                    if ($gpkg_type eq 'BLUETOOTH_MESSAGE') {
+                        $mac = $feature->GetField('Source Address');
+                    } elsif ($gpkg_type eq '80211_BEACON_MESSAGE') {
+                        $mac = $feature->GetField('BSSID');
+                        $ttype = $feature->GetField('Technology');
+                    }
+
+                    
+                }
+            } else {
+                next;
+            }            
+
             foreach my $field (@fields) {
                 #$data{$type}{$ttype}{$name}{$netid}
                 my $data = $feature->GetField($field);
@@ -397,6 +464,12 @@ sub parse_gpkg {
             }
         }
     }
+}
+
+sub field_mapper {
+    my %types = (
+        'Bluetooth' => ''
+    );
 }
 
 sub print_banner {
